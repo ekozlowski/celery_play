@@ -18,7 +18,7 @@ Requirements
 Should I use this in Production?
 ================================
 
-<iframe width="420" height="315" src="https://www.youtube.com/embed/kxRX6LXDpWs" frameborder="0" allowfullscreen></iframe>
+No.  Google "No No Cat".  :)
 
 Can I use this?
 ===============
