@@ -15,6 +15,8 @@
   - name: install pip
     apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=3600
     with_items:
+      - libjpeg-dev
+      - zlib1g-dev
       - python-pip
       - python-dev
 
@@ -23,6 +25,7 @@
     with_items:
       - celery
       - flower
+      - pillow
 
   - name: Make directories for Asset Server
     file:
@@ -52,7 +55,7 @@
       dest: /opt/processes/celery_tasks.py
       owner: vagrant
       group: vagrant
-      
+
   - name: let linux know about the asset service
     command: update-rc.d asset_service defaults
 
