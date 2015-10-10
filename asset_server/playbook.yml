@@ -1,6 +1,6 @@
 ---
-- name: vanilla
-  hosts: vanilla
+- name: worker
+  hosts: worker
   sudo: true
 
   tasks:
@@ -11,7 +11,6 @@
 
   - name: Enable management plugin
     command: rabbitmq-plugins enable rabbitmq_management
-    notify: restart rabbit
 
   - name: install pip
     apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=3600
@@ -25,15 +24,46 @@
       - celery
       - flower
 
-  - name: copy tasks.py to deployed machine
+  - name: Make directories for Asset Server
+    file:
+      state: directory
+      path: /opt/assets/
+  - name: Make directories for process pids
+    file:
+      state: directory
+      path: /opt/processes/
+  - name: Make the Vagrant user own /opt and everything under it.
+    file:
+      state: directory
+      path: /opt
+      owner: vagrant
+      group: vagrant
+      recurse: yes
+  - name: copy file for asset_service.sh
     copy:
-      src: ./files/tasks.py
-      dest: ./tasks.py
-      mode: 0777
-     
+      src: ./files/asset_service.sh
+      dest: /etc/init.d/asset_service
+      mode: 0755
+    notify: restart asset_service
+
+  - name: copy tasks for celery workers
+    copy:
+      src: ../image_resizer/celery_tasks.py
+      dest: /opt/processes/celery_tasks.py
+      owner: vagrant
+      group: vagrant
+      
+  - name: let linux know about the asset service
+    command: update-rc.d asset_service defaults
+
   handlers:
   - name: restart rabbit
     service: 
       name: rabbitmq-server
       state: restarted
+  - name: restart asset_service
+    service:
+      name: asset_service
+      state: restarted
+
 
