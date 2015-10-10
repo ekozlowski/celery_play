@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Credit to https://github.com/psobko/PythonSimpleHTTPServerStart/blob/master/startServer.sh
+# this is partially based on that code.
+
+
  ### BEGIN INIT INFO
  # Provides:   asset_server
  # Required-Start: $local_fs $remote_fs
@@ -12,16 +16,29 @@
  # Description:    Exposes /opt/assets as a file share over HTTP.
  ### END INIT INFO
  
- #Settings
- SERVICE='python -m SimpleHTTPServer'
- 
 start_serving() {
+  echo "-----Starting python SimpleHTTPServer-----"
+
+  #check for existing process and error if found
+  existing_pid=$(ps aux | grep '[p]ython -m SimpleHTTPServer' | awk '{print $2}')
+  if [[ ! -z "$existing_pid" ]]
+  then
+    echo "Existing SimpleHTTPServer found - Exiting."
+  fi
+  #set the current dir as the working directory
   cd /opt/assets
-  $SERVICE
+  python -m SimpleHTTPServer 8081 > /dev/null 2&>1&
+
+  #get the PID for the process
+  server_pid=$!
+  echo $server_pid > /opt/processes/SimpleHTTPServer.pid
+  echo "   Serving HTTP on http://0.0.0.0:8081"
+
+  #prompt to open in browser
 }
 
 stop_serving() {
-  
+  kill -9 `cat /opt/processes/SimpleHTTPServer.pid`
 }
 
  #Start-Stop here
@@ -36,14 +53,6 @@ stop_serving() {
      stop_serving
      start_serving
      ;;
-   status)
-     if pgrep -u $USERNAME -f $SERVICE > /dev/null
-     then
-       echo "$SERVICE is running."
-     else
-       echo "$SERVICE is not running."
-     fi
-     ;;
    command)
      if [ $# -gt 1 ]; then
        shift
@@ -54,7 +63,7 @@ stop_serving() {
      ;;
  
    *)
-   echo "Usage: $0 {start|stop|status|restart|}"
+   echo "Usage: $0 {start|stop|restart}"
    exit 1
    ;;
  esac
