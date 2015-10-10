@@ -5,6 +5,9 @@ Building an example of an image resizing backend using Celery for image processi
 
 Not getting fancy with the spices, just being really simple in deferring workloads.
 
+I will be covering this in a talk at DFW Pythoneers monthly meeting on Saturday,
+October 10, 2015 at Improving Enterprises.
+
 Requirements
 ============
 
@@ -15,7 +18,7 @@ Requirements
 Should I use this in Production?
 ================================
 
-No.
+<iframe width="420" height="315" src="https://www.youtube.com/embed/kxRX6LXDpWs" frameborder="0" allowfullscreen></iframe>
 
 Can I use this?
 ===============
