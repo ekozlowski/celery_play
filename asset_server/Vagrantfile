@@ -6,13 +6,25 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |v|
   v.customize ["modifyvm", :id, "--cpus", "2", "--memory", "2048"]
 end
-  config.vm.define "vanilla" do |vanilla|
-    vanilla.vm.network "private_network", ip: "192.168.50.10"
-    vanilla.vm.network "forwarded_port", guest: 8080, host: 8080
-    vanilla.vm.network "forwarded_port", guest: 15672, host: 15672
-    vanilla.vm.hostname = "vanilla.khome"
-    vanilla.vm.box = "trusty64"
-    vanilla.vm.box_url = "http://files.vagrantup.com/trusty64.box"
+  config.vm.define "worker" do |worker|
+    worker.vm.network "private_network", ip: "192.168.50.10"
+
+    # Local "Assets" (SimpleHTTPServer) server
+    worker.vm.network "forwarded_port", guest: 8081, host:8081
+
+    # rabbit MQ Management Console
+    worker.vm.network "forwarded_port", guest: 15672, host: 15672
+    
+    # rabbit MQ
+    worker.vm.network "forwarded_port", guest: 5672, host: 5672
+    
+    # flower control
+    worker.vm.network "forwarded_port", guest: 5555, host: 5555
+
+    worker.vm.hostname = "worker.khome"
+
+    worker.vm.box = "trusty64"
+    worker.vm.box_url = "http://files.vagrantup.com/trusty64.box"
   end
 
   
@@ -20,9 +32,9 @@ end
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook.yml"
     # Uncomment below to see debug output.
-    ansible.verbose = 'vvvv'
+    ansible.verbose = 'v'
     ansible.groups = {
-        "vanillaservers" => ["vanilla"]
+        "workers" => ["worker"]
     }
   end
 end
