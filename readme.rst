@@ -23,6 +23,6 @@ No.  Google "No No Cat".  :)
 Can I use this?
 ===============
 
-Sure, but you assume all responsibility.
+Sure, but you assume all responsibility.  This is MIT Licensed.
 
 
