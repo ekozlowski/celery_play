@@ -12,7 +12,7 @@
   - name: Enable management plugin
     command: rabbitmq-plugins enable rabbitmq_management
 
-  - name: install pip
+  - name: apt-get install pip, python-dev, and jpg & zlib dependencies
     apt: pkg={{ item }} state=present update_cache=yes cache_valid_time=3600
     with_items:
       - libjpeg-dev
@@ -20,7 +20,7 @@
       - python-pip
       - python-dev
 
-  - name: pip install celery
+  - name: pip install celery, flower, and pillow
     pip: name={{ item }} state=present
     with_items:
       - celery
