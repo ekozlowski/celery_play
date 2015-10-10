@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, redirect, url_for
 from werkzeug import secure_filename
 from flask import send_from_directory
-
+from celery_tasks import process
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -19,9 +19,8 @@ def upload_file():
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            process(filename, file.read())
+            return "Thank you for your upload... It is being processed."
     return '''
     <!doctype html>
     <title>Upload new File</title>
