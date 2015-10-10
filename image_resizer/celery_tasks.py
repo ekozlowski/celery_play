@@ -3,12 +3,11 @@ import time
 import random
 import os
 import io
+from PIL import Image
 
 app = Celery('celery_tasks', backend='rpc://', broker='amqp://guest@localhost//')
 ASSET_DIR = '/opt/assets/'
 
-import os, sys
-from PIL import Image
 
 @app.task
 def process(filename, filedata):
