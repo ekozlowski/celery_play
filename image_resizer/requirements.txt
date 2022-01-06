@@ -6,7 +6,7 @@ Werkzeug==0.16.0
 amqp==1.4.7
 anyjson==0.3.3
 billiard==3.3.0.20
-celery==3.1.18
+celery==5.2.2
 itsdangerous==0.24
 kombu==3.0.27
 pytz==2015.6
