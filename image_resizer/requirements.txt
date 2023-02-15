@@ -2,7 +2,7 @@ Flask==1.0.2
 Jinja2==2.11.3
 MarkupSafe==0.23
 Pillow==9.3.0
-Werkzeug==0.16.0
+Werkzeug==2.2.3
 amqp==1.4.7
 anyjson==0.3.3
 billiard==3.3.0.20
